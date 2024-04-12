@@ -1,3 +1,4 @@
+import { getCompany } from '../db/companies.js';
 import { getJob, getJobs } from '../db/jobs.js';
 
 export const Query = {
@@ -9,5 +10,9 @@ export const Query = {
     const job = await getJob(args.id);
     return job;
   },
+  company: async (parent, args, context) => {
+    const company = await getCompany(args.id);
+    return company;
+  }
 };
 
