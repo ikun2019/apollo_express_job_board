@@ -60,4 +60,21 @@ export async function getCompany(id) {
   `;
   const data = await client.request(query, { companyId: id });
   return data.company;
-}
+};
+
+export async function createJob({ title, description }) {
+  const mutation = gql`
+    mutation($input: createJobInput!){
+      createJob(input: $input) {
+        id
+        title
+        description
+        date
+      }
+    }
+  `;
+  const data = await client.request(mutation, {
+    input: { title, description }
+  });
+  return data.createJob;
+};
