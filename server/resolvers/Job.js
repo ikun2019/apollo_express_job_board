@@ -1,3 +1,4 @@
+import { notFoundError } from './Error.js';
 import { getCompany } from '../db/companies.js';
 
 export const Job = {
@@ -6,6 +7,9 @@ export const Job = {
   },
   company: async (job) => {
     const company = await getCompany(job.companyId);
+    if (!company) {
+      throw notFoundError('Companyが見つかりません');
+    };
     return {
       ...company
     }
