@@ -23,6 +23,9 @@ function CompanyPage() {
       <div className="box">
         {company.description}
       </div>
+      <div className='title is-5'>
+        Jobs at {company.name}
+      </div>
     </div>
   );
 }
