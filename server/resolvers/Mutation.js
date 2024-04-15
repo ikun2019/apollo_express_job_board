@@ -1,10 +1,13 @@
 import { createJob, deleteJob, updateJob } from '../db/jobs.js';
+import { unAuthorizeError } from './Error.js';
 
 export const Mutation = {
   createJob: (parent, args, context) => {
-    const companyId = "FjcJCHJALA4i";
+    if (!context.user) {
+      throw unAuthorizeError("Missing authentication");
+    };
     return createJob({
-      companyId: companyId,
+      companyId: context.user.companyId,
       title: args.input.title,
       description: args.input.description,
     });

@@ -20,24 +20,4 @@ export async function handleLogin(req, res) {
     const token = jwt.sign(claims, secret);
     res.json({ token });
   }
-}
-
-
-function getTokenPayload(token) {
-  const user = jwt.verify(token, secret);
-  return user;
-};
-
-export async function getUserId(req) {
-  if (req) {
-    const authHeader = req.headers.authorization;
-    if (authHeader) {
-      const token = authHeader.replace('Bearer ', '');
-      if (!token) {
-        throw new Error('認証されていません');
-      };
-      const user = getTokenPayload(token);
-      return user.sub;
-    };
-  }
 };
