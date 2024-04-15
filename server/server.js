@@ -4,7 +4,7 @@ import { ApolloServer } from '@apollo/server';
 import fs from 'fs';
 import path from 'path';
 import { expressMiddleware } from '@apollo/server/express4';
-import { authMiddleware, handleLogin } from './auth.js';
+import { authMiddleware, handleLogin, getUserId } from './auth.js';
 
 
 const PORT = 9000;
@@ -35,11 +35,14 @@ const apolloServer = new ApolloServer({
 
 const context = ({ req, res }) => ({
   ...req,
+  userId: req && req.headers.authorization ? getUserId(req) : null,
 });
 
 (async () => {
   await apolloServer.start();
-  app.use('/graphql', expressMiddleware(apolloServer));
+  app.use('/graphql', expressMiddleware(apolloServer, {
+    context: context,
+  }));
   app.listen({ port: PORT }, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log('GraphQL is running');
