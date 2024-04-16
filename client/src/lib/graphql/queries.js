@@ -39,7 +39,21 @@ export const apolloClient = new ApolloClient({
   },
 });
 
-
+export const getJobsQuery = gql`
+  query {
+    jobs{
+      id,
+      date,
+      title,
+      description,
+      company {
+        id
+        name
+        description
+      }
+    }
+  }
+`;
 
 export async function getJobs() {
   const query = gql`
@@ -62,6 +76,21 @@ export async function getJobs() {
   return result.data.jobs;
 };
 
+export const getJobQuery = gql`
+  query($jobId: ID!) {
+    job(id: $jobId) {
+      id
+      date
+      title
+      description
+      company {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export async function getJob(id) {
   const query = gql`
     query($jobId: ID!) {
@@ -82,24 +111,20 @@ export async function getJob(id) {
   return result.data.job;
 };
 
-export async function getCompany(id) {
-  // const query = gql`
-  // query($companyId: ID!) {
-  //   company(id: $companyId) {
-  //     id
-  //     name
-  //     description
-  //     jobs {
-  //       id
-  //       date
-  //       title
-  //     }
-  //   }
-  // }
-  // `;
-  const result = await apolloClient.query({ jobByIdQuery, variables: { companyId: id } });
-  return result.data.company;
-};
+export const companyByIdQuery = gql`
+  query($companyId: ID!) {
+    company(id: $companyId) {
+      id
+      name
+      description
+      jobs {
+        id
+        date
+        title
+      }
+    }
+  }
+`;
 
 const jobDatailFragment = gql`
 fragment JobDetail on Job {

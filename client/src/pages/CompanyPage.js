@@ -1,35 +1,15 @@
+import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router';
-import { getCompany } from '../lib/graphql/queries';
-import { useEffect, useState } from 'react';
+import { companyByIdQuery } from '../lib/graphql/queries';
 import JobList from '../components/JobList';
 
 function CompanyPage() {
   const { companyId } = useParams();
-  const [state, setState] = useState({
-    company: null,
-    loading: true,
-    error: false,
+  const { data, loading, error
+  } = useQuery(companyByIdQuery, {
+    variables: { companyId }
   });
-  useEffect(() => {
-    (async () => {
-      try {
-        const company = await getCompany(companyId);
-        setState({
-          company: company,
-          loading: false,
-          error: false,
-        });
-      } catch (error) {
-        setState({
-          company: null,
-          loading: false,
-          error: true,
-        });
-      }
-    })();
-  }, [companyId]);
-
-  const { company, loading, error } = state;
+  console.log(data);
 
   if (loading) {
     return <div>Loading...</div>
@@ -42,15 +22,15 @@ function CompanyPage() {
   return (
     <div>
       <h1 className="title">
-        {company.name}
+        {data.company.name}
       </h1>
       <div className="box">
-        {company.description}
+        {data.company.description}
       </div>
       <div className='title is-5'>
-        Jobs at {company.name}
+        Jobs at {data.company.name}
       </div>
-      <JobList jobs={company.jobs} />
+      <JobList jobs={data.company.jobs} />
     </div>
   );
 }
