@@ -101,31 +101,35 @@ export async function getCompany(id) {
   return result.data.company;
 };
 
+const jobDatailFragment = gql`
+fragment JobDetail on Job {
+  id
+  date
+  title
+  description
+  company {
+    id
+    name
+  }
+}`;
+
 const jobByIdQuery = gql`
   query($jobId: ID!) {
       job(id: $jobId) {
-        id
-        date
-        title
-        description
-        company {
-          id
-          name
-        }
+        ...JobDetail
       }
     }
+    ${jobDatailFragment}
 `;
 
 export async function createJob({ title, description }) {
   const mutation = gql`
     mutation($input: createJobInput!){
       createJob(input: $input) {
-        id
-        title
-        description
-        date
+        ...JobDetail
       }
     }
+    ${jobDatailFragment}
   `;
   const result = await apolloClient.mutate({
     mutation,
