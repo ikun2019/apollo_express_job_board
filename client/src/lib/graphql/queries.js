@@ -138,13 +138,22 @@ fragment JobDetail on Job {
   }
 }`;
 
-const jobByIdQuery = gql`
+export const jobByIdQuery = gql`
   query($jobId: ID!) {
       job(id: $jobId) {
         ...JobDetail
       }
     }
     ${jobDatailFragment}
+`;
+
+export const createJobMutation = gql`
+  mutation($input: createJobInput!){
+    createJob(input: $input) {
+      ...JobDetail
+    }
+  }
+  ${jobByIdQuery}
 `;
 
 export async function createJob({ title, description }) {
