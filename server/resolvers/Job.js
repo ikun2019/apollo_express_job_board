@@ -1,18 +1,19 @@
 import { notFoundError } from './Error.js';
-import { getCompany } from '../db/companies.js';
+import { companyLoader, getCompany } from '../db/companies.js';
 
 export const Job = {
   date: (job) => {
     return toIsoDate(job.createdAt);
   },
   company: async (job) => {
-    const company = await getCompany(job.companyId);
-    if (!company) {
-      throw notFoundError('Companyが見つかりません');
-    };
-    return {
-      ...company
-    }
+    return companyLoader.load(job.companyId);
+    // const company = await getCompany(job.companyId);
+    // if (!company) {
+    //   throw notFoundError('Companyが見つかりません');
+    // };
+    // return {
+    //   ...company
+    // }
   }
 };
 
